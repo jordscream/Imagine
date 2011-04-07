@@ -1,5 +1,5 @@
-Coordinate Coordinates System
-============================
+Coordinates System
+==================
 
 The coordinate system use by Imagine is very similar to Cartesian Coordinate System, with some exceptions:
 

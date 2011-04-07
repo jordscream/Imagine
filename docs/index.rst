@@ -18,6 +18,7 @@ Contents:
    drawing
    filters
    exceptions
+   api/index
 
 Indices and tables
 ==================
