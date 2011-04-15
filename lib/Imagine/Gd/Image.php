@@ -87,13 +87,6 @@ final class Image implements ImageInterface
      */
     final public function crop(PointInterface $start, BoxInterface $size)
     {
-        if (!$start->in($this->getSize())) {
-            throw new OutOfBoundsException(
-                'Crop coordinates must start at minimum 0, 0 position from '.
-                'top  left corner, crop height and width must be positive '.
-                'integers and must not exceed the current image borders'
-            );
-        }
 
         $width  = $size->getWidth();
         $height = $size->getHeight();
@@ -184,6 +177,47 @@ final class Image implements ImageInterface
 
         return $this;
     }
+    
+    final public function resizeWithRatio(BoxInterface $size)
+    {
+        $toWidth  = $size->getWidth();
+        $toHeight = $size->getHeight();
+        
+        // Get the original geometry and calculate scales
+        $sizeOriginal = $this->getSize();
+        $width = $sizeOriginal->getWidth();
+        $height = $sizeOriginal->getHeight();
+        $lowend = 0.8;
+        $highend = 1.25;
+    
+        $imageResized = imagecreatetruecolor($toWidth, $toHeight);
+
+        $scaleX = (float)$toWidth / $width;
+        $scaleY = (float)$toHeight / $height;
+        $scale = min($scaleX, $scaleY);
+
+        $dstW = $toWidth;
+        $dstH = $toHeight;
+        $dstX = $dstY = 0;
+
+        $scaleR = $scaleX / $scaleY; 
+        if($scaleR < $lowend || $scaleR > $highend) {
+            $dstW = (int)($scale *    $width+ 0.5);
+            $dstH = (int)($scale * $height + 0.5);
+
+            $dstX = (int)(0.5 * ($toWidth - $dstW));
+            $dstY = (int)(0.5 * ($toHeight - $dstH));
+         }
+           
+         imagecopyresampled(
+                $imageResized, $this->resource, $dstX, $dstY, 0, 0,
+                $dstW, $dstH, $width, $height);
+        
+        $this->resource = $imageResized;
+        
+        return $this;
+    }
+    
 
     /**
      * (non-PHPdoc)
