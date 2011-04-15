@@ -11,14 +11,17 @@
 
 namespace Imagine\Gmagick;
 
-use Imagine\Color;
-use Imagine\BoxInterface;
+use Imagine\Image\BoxInterface;
+use Imagine\Image\Color;
+use Imagine\ImagineInterface;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\RuntimeException;
-use Imagine\ImagineInterface;
 
 class Imagine implements ImagineInterface
 {
+    /**
+     * @throws Imagine\Exception\RuntimeException
+     */
     public function __construct()
     {
         if (!class_exists('Gmagick')) {
@@ -75,5 +78,18 @@ class Imagine implements ImagineInterface
         $gmagick = new \Gmagick();
         $gmagick->readimageblob($string);
         return new Image($gmagick);
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see Imagine\ImagineInterface::font()
+     */
+    public function font($file, $size, Color $color)
+    {
+        $gmagick = new \Gmagick();
+
+        $gmagick->newimage(1, 1, 'transparent');
+
+        return new Font($gmagick, $file, $size, $color);
     }
 }

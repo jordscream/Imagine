@@ -12,14 +12,22 @@
 namespace Imagine\Gd;
 
 use Imagine\AbstractImagineTest;
+use Imagine\Image\Box;
 
 class ImagineTest extends AbstractImagineTest
 {
     protected function setUp()
     {
+        parent::setUp();
+
         if (!function_exists('gd_info')) {
             $this->markTestSkipped('Gd not installed');
         }
+    }
+
+    protected function getEstimatedFontBox()
+    {
+        return new Box(112, 46);
     }
 
     protected function getImagine()

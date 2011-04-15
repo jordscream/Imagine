@@ -9,33 +9,33 @@
  * file that was distributed with this source code.
  */
 
-namespace Imagine;
+namespace Imagine\Image;
 
-final class Font
+abstract class AbstractFont implements FontInterface
 {
     /**
      * @var string
      */
-    private $file;
+    protected $file;
 
     /**
      * @var integer
      */
-    private $size;
+    protected $size;
 
     /**
-     * @var Imagine\Color
+     * @var Imagine\Image\Color
      */
-    private $color;
+    protected $color;
 
     /**
      * Constructs a font with specified $file, $size and $color
      *
      * The font size is to be specified in points (e.g. 10pt means 10)
      *
-     * @param string        $file
-     * @param integer       $size
-     * @param Imagine\Color $color
+     * @param string              $file
+     * @param integer             $size
+     * @param Imagine\Image\Color $color
      */
     public function __construct($file, $size, Color $color)
     {
@@ -45,9 +45,8 @@ final class Font
     }
 
     /**
-     * Gets the fontfile for current font
-     *
-     * @return string
+     * (non-PHPdoc)
+     * @see Imagine\Image\FontInterface::getFile()
      */
     public function getFile()
     {
@@ -55,9 +54,8 @@ final class Font
     }
 
     /**
-     * Gets font's integer point size
-     *
-     * @return integer
+     * (non-PHPdoc)
+     * @see Imagine\Image\FontInterface::getSize()
      */
     public function getSize()
     {
@@ -65,9 +63,8 @@ final class Font
     }
 
     /**
-     * Gets font's color
-     *
-     * @return Imagine\Color
+     * (non-PHPdoc)
+     * @see Imagine\Image\FontInterface::getColor()
      */
     public function getColor()
     {

@@ -11,19 +11,17 @@
 
 namespace Imagine\Gmagick;
 
-use Imagine\Point;
-
-use Imagine\Fill\FillInterface;
-
-use Imagine\Color;
-use Imagine\PointInterface;
-use Imagine\Box;
-use Imagine\BoxInterface;
 use Imagine\Exception\OutOfBoundsException;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\RuntimeException;
-use Imagine\ImageInterface;
+use Imagine\Fill\FillInterface;
 use Imagine\Gmagick\Imagine;
+use Imagine\ImageInterface;
+use Imagine\Image\Box;
+use Imagine\Image\BoxInterface;
+use Imagine\Image\Color;
+use Imagine\Image\Point;
+use Imagine\Image\PointInterface;
 
 class Image implements ImageInterface
 {
@@ -76,13 +74,13 @@ class Image implements ImageInterface
             );
         }
 
-        $width  = $size->getWidth();
-        $height = $size->getHeight();
-        $x      = $start->getX();
-        $y      = $start->getY();
-
         try {
-            $this->gmagick->cropimage($width, $height, $x, $y);
+            $this->gmagick->cropimage(
+                $size->getWidth(),
+                $size->getHeight(),
+                $start->getX(),
+                $start->getY()
+            );
         } catch (\GmagickException $e) {
             throw new RuntimeException(
                 'Crop operation failed', $e->getCode(), $e
@@ -132,9 +130,6 @@ class Image implements ImageInterface
      */
     public function paste(ImageInterface $image, PointInterface $start)
     {
-        $x = $start->getX();
-        $y = $start->getY();
-
         if (!$image instanceof self) {
             throw new InvalidArgumentException(sprintf(
                 'Gmagick\Image can only paste() Gmagick\Image instances, '.
@@ -153,7 +148,8 @@ class Image implements ImageInterface
             $this->gmagick->compositeimage(
                 $image->gmagick,
                 \Gmagick::COMPOSITE_DEFAULT,
-                $x, $y
+                $start->getX(),
+                $start->getY()
             );
         } catch (\GmagickException $e) {
             throw new RuntimeException(
@@ -428,13 +424,38 @@ class Image implements ImageInterface
     }
 
     /**
+     * (non-PHPdoc)
+     * @see Imagine\ImageInterface::histogram()
+     */
+    public function histogram()
+    {
+        $pixels = $this->gmagick->getimagehistogram();
+
+        return array_map(
+            function(\GmagickPixel $pixel)
+            {
+                $info = $pixel->getColor();
+                return new Color(
+                    array(
+                        $info['r'],
+                        $info['g'],
+                        $info['b'],
+                    ),
+                    (int) round($info['a'] * 100)
+                );
+            },
+            $pixels
+        );
+    }
+
+    /**
      * Gets specifically formatted color string from Color instance
      *
-     * @param Color $color
+     * @param Imagine\Image\Color $color
      *
      * @return string
      */
-    protected function getColor(Color $color)
+    private function getColor(Color $color)
     {
         $pixel = new \GmagickPixel((string) $color);
 

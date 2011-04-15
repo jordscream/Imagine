@@ -11,20 +11,25 @@
 
 namespace Imagine\Imagick;
 
-use Imagine\Font;
-
-use Imagine\Color;
-use Imagine\Point;
-use Imagine\PointInterface;
-use Imagine\BoxInterface;
 use Imagine\Draw\DrawerInterface;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\RuntimeException;
+use Imagine\Image\AbstractFont;
+use Imagine\Image\BoxInterface;
+use Imagine\Image\Color;
+use Imagine\Image\Point;
+use Imagine\Image\PointInterface;
 
 final class Drawer implements DrawerInterface
 {
+    /**
+     * @var Imagick
+     */
     private $imagick;
 
+    /**
+     * @param Imagick $imagick
+     */
     public function __construct(\Imagick $imagick)
     {
         $this->imagick = $imagick;
@@ -332,7 +337,7 @@ final class Drawer implements DrawerInterface
      * (non-PHPdoc)
      * @see Imagine\Draw\DrawerInterface::text()
      */
-    public function text($string, Font $font, PointInterface $position, $angle = 0)
+    public function text($string, AbstractFont $font, PointInterface $position, $angle = 0)
     {
         try {
             $pixel = $this->getColor($font->getColor());
@@ -376,7 +381,7 @@ final class Drawer implements DrawerInterface
     /**
      * Gets specifically formatted color string from Color instance
      *
-     * @param Color $color
+     * @param Imagine\Image\Color $color
      *
      * @return string
      */

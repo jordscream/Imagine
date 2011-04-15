@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Imagine;
+namespace Imagine\Image;
 
 class BoxTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers Imagine\Box::getWidth
-     * @covers Imagine\Box::getHeight
+     * @covers Imagine\Image\Box::getWidth
+     * @covers Imagine\Image\Box::getHeight
      *
      * @dataProvider getSizes
      *
@@ -45,7 +45,7 @@ class BoxTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Imagine\Box::__construct
+     * @covers Imagine\Image\Box::__construct
      *
      * @expectedException Imagine\Exception\InvalidArgumentException
      *
@@ -75,7 +75,7 @@ class BoxTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Imagine\Box::contains
+     * @covers Imagine\Image\Box::contains
      *
      * @dataProvider getSizeBoxStartAndExpected
      *
@@ -110,7 +110,7 @@ class BoxTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @cover Imagine\Box::__toString
+     * @cover Imagine\Image\Box::__toString
      */
     public function testToString()
     {
@@ -129,5 +129,28 @@ class BoxTest extends \PHPUnit_Framework_TestCase
         $box = new Box(10, 20);
 
         $this->assertEquals(new Box(15, 25), $box->increase(5));
+    }
+
+    /**
+     * @dataProvider getSizesAndSquares
+     *
+     * @param integer $width
+     * @param integer $height
+     * @param integer $square
+     */
+    public function testShouldCalculateSquare($width, $height, $square)
+    {
+        $box = new Box($width, $height);
+
+        $this->assertEquals($square, $box->square());
+    }
+
+    public function getSizesAndSquares()
+    {
+        return array(
+            array(10, 15, 150),
+            array(2, 2, 4),
+            array(9, 8, 72),
+        );
     }
 }

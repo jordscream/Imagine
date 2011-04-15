@@ -11,13 +11,13 @@
 
 namespace Imagine\Fill\Gradient;
 
-use Imagine\PointInterface;
+use Imagine\Image\PointInterface;
 
 final class Horizontal extends Linear
 {
     /**
      * (non-PHPdoc)
-     * @see Imagine\Mask\Gradient.Linear::getDistance()
+     * @see Imagine\Mask\Gradient\Linear::getDistance()
      */
     public function getDistance(PointInterface $position)
     {

@@ -12,13 +12,15 @@
 namespace Imagine\Gmagick;
 
 use Imagine\AbstractImageTest;
-use Imagine\Color;
+use Imagine\Image\Color;
 use Imagine\ImageInterface;
 
 class ImageTest extends AbstractImageTest
 {
     protected function setUp()
     {
+        parent::setUp();
+
         if (!class_exists('Gmagick')) {
             $this->markTestSkipped('Gmagick is not installed');
         }

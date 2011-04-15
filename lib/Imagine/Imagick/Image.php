@@ -11,18 +11,17 @@
 
 namespace Imagine\Imagick;
 
-use Imagine\Box;
-use Imagine\BoxInterface;
-use Imagine\Color;
 use Imagine\Exception\OutOfBoundsException;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\RuntimeException;
 use Imagine\Fill\FillInterface;
+use Imagine\Image\Box;
+use Imagine\Image\BoxInterface;
+use Imagine\Image\Color;
+use Imagine\Image\Point;
+use Imagine\Image\PointInterface;
 use Imagine\ImageInterface;
-use Imagine\Imagick\Imagine;
 use Imagine\Mask\MaskInterface;
-use Imagine\Point;
-use Imagine\PointInterface;
 
 final class Image implements ImageInterface
 {
@@ -139,9 +138,6 @@ final class Image implements ImageInterface
      */
     public function paste(ImageInterface $image, PointInterface $start)
     {
-        $x = $start->getX();
-        $y = $start->getY();
-
         if (!$image instanceof self) {
             throw new InvalidArgumentException(sprintf('Imagick\Image can '.
                 'only paste() Imagick\Image instances, %s given',
@@ -159,7 +155,9 @@ final class Image implements ImageInterface
         try {
 
             $this->imagick->compositeImage(
-                $image->imagick, \Imagick::COMPOSITE_DEFAULT, $x, $y
+                $image->imagick, \Imagick::COMPOSITE_DEFAULT,
+                $start->getX(),
+                $start->getY()
             );
         } catch (\ImagickException $e) {
             throw new RuntimeException(
@@ -286,19 +284,21 @@ final class Image implements ImageInterface
             throw new InvalidArgumentException('Invalid mode specified');
         }
 
+        $width     = $size->getWidth();
+        $height    = $size->getHeight();
         $thumbnail = $this->copy();
 
         try {
             if ($mode === ImageInterface::THUMBNAIL_INSET) {
                 $thumbnail->imagick->thumbnailImage(
-                    $size->getWidth(),
-                    $size->getHeight(),
+                    $width,
+                    $height,
                     true
                 );
             } else if ($mode === ImageInterface::THUMBNAIL_OUTBOUND) {
                 $thumbnail->imagick->cropThumbnailImage(
-                    $size->getWidth(),
-                    $size->getHeight()
+                    $width,
+                    $height
                 );
             }
         } catch (\ImagickException $e) {
@@ -434,6 +434,31 @@ final class Image implements ImageInterface
     }
 
     /**
+     * (non-PHPdoc)
+     * @see Imagine\ImageInterface::histogram()
+     */
+    public function histogram()
+    {
+        $pixels = $this->imagick->getImageHistogram();
+
+        return array_map(
+            function(\ImagickPixel $pixel)
+            {
+                $info = $pixel->getColor();
+                return new Color(
+                    array(
+                        $info['r'],
+                        $info['g'],
+                        $info['b'],
+                    ),
+                    (int) round($info['a'] * 100)
+                );
+            },
+            $pixels
+        );
+    }
+
+    /**
      * Internal
      *
      * Applies options before save or output
@@ -451,7 +476,7 @@ final class Image implements ImageInterface
     /**
      * Gets specifically formatted color string from Color instance
      *
-     * @param Color $color
+     * @param Imagine\Image\Color $color
      *
      * @return string
      */

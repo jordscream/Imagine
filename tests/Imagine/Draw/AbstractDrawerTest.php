@@ -9,13 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Imagine;
+namespace Imagine\Draw;
 
-use Imagine\Point;
-use Imagine\Point\Center;
-use Imagine\Box;
+use Imagine\Image\Box;
+use Imagine\Image\Color;
+use Imagine\Image\Font;
+use Imagine\Image\Point;
+use Imagine\Image\Point\Center;
+use Imagine\Test\ImagineTestCase;
 
-abstract class AbstractDrawerTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractDrawerTest extends ImagineTestCase
 {
     public function testDrawASmileyFace()
     {
@@ -177,7 +180,7 @@ abstract class AbstractDrawerTest extends \PHPUnit_Framework_TestCase
 
         $imagine = $this->getImagine();
         $canvas  = $imagine->create(new Box(400, 300), new Color('fff'));
-        $font    = new Font($path, 36, $black);
+        $font    = $imagine->font($path, 36, $black);
 
         $canvas->draw()
             ->text('Bulat', $font, new Point(0, 0), 135);
@@ -191,7 +194,7 @@ abstract class AbstractDrawerTest extends \PHPUnit_Framework_TestCase
         unlink($file36);
 
         $canvas = $imagine->create(new Box(400, 300), new Color('fff'));
-        $font   = new Font($path, 24, $black);
+        $font   = $imagine->font($path, 24, $black);
 
         $canvas->draw()
             ->text('Bulat', $font, new Point(24, 24));
@@ -205,7 +208,7 @@ abstract class AbstractDrawerTest extends \PHPUnit_Framework_TestCase
         unlink($file24);
 
         $canvas = $imagine->create(new Box(400, 300), new Color('fff'));
-        $font   = new Font($path, 18, $black);
+        $font   = $imagine->font($path, 18, $black);
 
         $canvas->draw()
             ->text('Bulat', $font, new Point(18, 18));
@@ -219,7 +222,7 @@ abstract class AbstractDrawerTest extends \PHPUnit_Framework_TestCase
         unlink($file18);
 
         $canvas = $imagine->create(new Box(400, 300), new Color('fff'));
-        $font   = new Font($path, 12, $black);
+        $font   = $imagine->font($path, 12, $black);
 
         $canvas->draw()
             ->text('Bulat', $font, new Point(12, 12));

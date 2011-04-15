@@ -11,19 +11,25 @@
 
 namespace Imagine\Gmagick;
 
-use Imagine\BoxInterface;
-use Imagine\Color;
 use Imagine\Draw\DrawerInterface;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\RuntimeException;
-use Imagine\Font;
-use Imagine\Point;
-use Imagine\PointInterface;
+use Imagine\Image\AbstractFont;
+use Imagine\Image\BoxInterface;
+use Imagine\Image\Color;
+use Imagine\Image\Point;
+use Imagine\Image\PointInterface;
 
 final class Drawer implements DrawerInterface
 {
+    /**
+     * @var Gmagick
+     */
     private $gmagick;
 
+    /**
+     * @param Gmagick $gmagick
+     */
     public function __construct(\Gmagick $gmagick)
     {
         $this->gmagick = $gmagick;
@@ -305,7 +311,11 @@ final class Drawer implements DrawerInterface
         return $this;
     }
 
-    public function text($string, Font $font, PointInterface $position, $angle = 0)
+    /**
+     * (non-PHPdoc)
+     * @see Imagine\Draw\DrawerInterface::text()
+     */
+    public function text($string, AbstractFont $font, PointInterface $position, $angle = 0)
     {
         try {
             $pixel = $this->getColor($font->getColor());
@@ -346,11 +356,11 @@ final class Drawer implements DrawerInterface
     /**
      * Gets specifically formatted color string from Color instance
      *
-     * @param Color $color
+     * @param Imagine\Image\Color $color
      *
      * @return string
      */
-    protected function getColor(Color $color)
+    private function getColor(Color $color)
     {
         $pixel = new \GmagickPixel((string) $color);
 

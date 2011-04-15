@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Imagine;
+namespace Imagine\Image;
 
 use Imagine\Exception\InvalidArgumentException;
 
@@ -42,13 +42,13 @@ final class Box implements BoxInterface
             ));
         }
 
-        $this->width  = $width;
-        $this->height = $height;
+        $this->width  = (int) $width;
+        $this->height = (int) $height;
     }
 
     /**
      * (non-PHPdoc)
-     * @see Imagine\BoxInterface::getWidth()
+     * @see Imagine\Image\BoxInterface::getWidth()
      */
     public function getWidth()
     {
@@ -57,7 +57,7 @@ final class Box implements BoxInterface
 
     /**
      * (non-PHPdoc)
-     * @see Imagine\BoxInterface::getHeight()
+     * @see Imagine\Image\BoxInterface::getHeight()
      */
     public function getHeight()
     {
@@ -66,25 +66,25 @@ final class Box implements BoxInterface
 
     /**
      * (non-PHPdoc)
-     * @see Imagine\BoxInterface::scale()
+     * @see Imagine\Image\BoxInterface::scale()
      */
     public function scale($ratio)
     {
-        return new Box($ratio * $this->width, $ratio * $this->height);
+        return new Box(round($ratio * $this->width), round($ratio * $this->height));
     }
 
     /**
      * (non-PHPdoc)
-     * @see Imagine\BoxInterface::increase()
+     * @see Imagine\Image\BoxInterface::increase()
      */
     public function increase($size)
     {
-        return new Box($size + $this->width, $size + $this->height);
+        return new Box((int) $size + $this->width, (int) $size + $this->height);
     }
 
     /**
      * (non-PHPdoc)
-     * @see Imagine\BoxInterface::contains()
+     * @see Imagine\Image\BoxInterface::contains()
      */
     public function contains(BoxInterface $box, PointInterface $start = null)
     {
@@ -97,7 +97,16 @@ final class Box implements BoxInterface
 
     /**
      * (non-PHPdoc)
-     * @see Imagine\BoxInterface::__toString()
+     * @see Imagine\Image\BoxInterface::square()
+     */
+    public function square()
+    {
+        return $this->width * $this->height;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see Imagine\Image\BoxInterface::__toString()
      */
     public function __toString()
     {

@@ -11,14 +11,14 @@
 
 namespace Imagine\Gd;
 
-use Imagine\BoxInterface;
-use Imagine\Color;
 use Imagine\Draw\DrawerInterface;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\OutOfBoundsException;
 use Imagine\Exception\RuntimeException;
-use Imagine\Font;
-use Imagine\PointInterface;
+use Imagine\Image\AbstractFont;
+use Imagine\Image\BoxInterface;
+use Imagine\Image\Color;
+use Imagine\Image\PointInterface;
 
 final class Drawer implements DrawerInterface
 {
@@ -175,7 +175,7 @@ final class Drawer implements DrawerInterface
             if (!$coordinate instanceof PointInterface) {
                 throw new InvalidArgumentException(sprintf(
                     'Each entry in coordinates array must be instance of '.
-                    'Imagine\PointInterface, %s given', var_export($coordinate)
+                    'Imagine\Image\PointInterface, %s given', var_export($coordinate)
                 ));
             }
 
@@ -203,7 +203,7 @@ final class Drawer implements DrawerInterface
      * (non-PHPdoc)
      * @see Imagine\Draw\DrawerInterface::text()
      */
-    public function text($string, Font $font, PointInterface $position, $angle = 0)
+    public function text($string, AbstractFont $font, PointInterface $position, $angle = 0)
     {
         $angle    = -1 * $angle;
         $fontsize = $font->getSize();
@@ -248,11 +248,11 @@ final class Drawer implements DrawerInterface
      *
      * Generates a GD color from Color instance
      *
-     * @param  Color $color
-     *
-     * @throws RuntimeException
+     * @param  Imagine\Image\Color $color
      *
      * @return resource
+     *
+     * @throws Imagine\Exception\RuntimeException
      */
     private function getColor(Color $color)
     {

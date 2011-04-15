@@ -11,12 +11,14 @@
 
 namespace Imagine\Imagick;
 
-use Imagine\AbstractDrawerTest;
+use Imagine\Draw\AbstractDrawerTest;
 
 class DrawerTest extends AbstractDrawerTest
 {
     protected function setUp()
     {
+        parent::setUp();
+
         if (!class_exists('Imagick')) {
             $this->markTestSkipped('Imagick is not installed');
         }

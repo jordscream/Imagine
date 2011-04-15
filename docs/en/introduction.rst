@@ -18,6 +18,9 @@ To open an existing image, all you need is to instantiate an image factory and i
     
     $image = $imagine->open('/path/to/image.jpg');
 
+.. TIP::
+    Read more about ImagineInterface_
+
 The ``ImagineInterface::open()`` method may throw one of the following exceptions:
 
 * ``Imagine\Exception\InvalidArgumentException``
@@ -31,8 +34,8 @@ Now that you've opened an image, you can perform manipulations on it:
 ::
 
     <?php
-    use Imagine\Box;
-    use Imagine\Point;
+    use Imagine\Image\Box;
+    use Imagine\Image\Point;
     
     $image->resize(new Box(15, 25))
         ->rotate(45)
@@ -40,7 +43,7 @@ Now that you've opened an image, you can perform manipulations on it:
         ->save('/path/to/new/image.jpg');
 
 .. TIP::
-    Read more about Image_
+    Read more about ImageInterface_
     Read more about coordinates_
 
 Create New Images
@@ -51,14 +54,14 @@ Imagine also lets you create new, empty images. The following example creates an
 ::
 
     <?php
-    $image = $imagine->create(new Imagine\Box(400, 300));
+    $image = $imagine->create(new Imagine\Image\Box(400, 300));
 
 You can optionally specify the fill color for the new image, which defaults to opaque white. The following example creates a new image with a fully-transparent black background:
 
 ::
 
     <?php
-    $image = $imagine->create(new Imagine\Box(400, 300), new Imagine\Color('000', 100));
+    $image = $imagine->create(new Imagine\Image\Box(400, 300), new Imagine\Image\Color('000', 100));
 
 Color Class
 +++++++++++
@@ -68,11 +71,11 @@ Color is a class in Imagine, which takes two arguments in its constructor: the R
 ::
 
     <?php
-    $white = new Imagine\Color('fff', 100);
-    $white = new Imagine\Color('ffffff', 100);
-    $white = new Imagine\Color('#fff', 100);
-    $white = new Imagine\Color('#ffffff', 100);
-    $white = new Imagine\Color(array(255, 255, 255), 100);
+    $white = new Imagine\Image\Color('fff', 100);
+    $white = new Imagine\Image\Color('ffffff', 100);
+    $white = new Imagine\Image\Color('#fff', 100);
+    $white = new Imagine\Image\Color('#ffffff', 100);
+    $white = new Imagine\Image\Color(array(255, 255, 255), 100);
 
 After you have instantiated a color, you can easily get its Red, Green, Blue and Alpha (transparency) values:
 
@@ -99,7 +102,7 @@ Here is how we would approach this problem with Imagine.
     use Imagine;
     
     // make an empty image (canvas) 120x160px
-    $collage = $imagine->create(new Imagine\Box(120, 160));
+    $collage = $imagine->create(new Imagine\Image\Box(120, 160));
     
     // starting coordinates (in pixels) for inserting the first image
     $x = 0;
@@ -110,7 +113,7 @@ Here is how we would approach this problem with Imagine.
         $photo = $imagine->open($path);
         
         // paste photo at current position
-        $collage->paste($photo, new Imagine\Point($x, $y));
+        $collage->paste($photo, new Imagine\Image\Point($x, $y));
         
         // move position by 30px to the right
         $x += 30;
@@ -136,6 +139,7 @@ The architecture is very flexible, as the filters don't need any processing logi
 
 The ``Transformation`` object is an example of a composite filter, representing a stack or queue of filters, that get applied to an Image upon application of the ``Transformation`` itself.
 
-.. _Image: /avalanche123/Imagine/blob/master/docs/en/image.rst
+.. _ImagineInterface: /avalanche123/Imagine/blob/master/docs/en/imagine.rst
+.. _ImageInterface: /avalanche123/Imagine/blob/master/docs/en/image.rst
 .. _coordinates: /avalanche123/Imagine/blob/master/docs/en/coordinates.rst
 .. _exceptions: /avalanche123/Imagine/blob/master/docs/en/exceptions.rst

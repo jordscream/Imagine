@@ -11,12 +11,14 @@
 
 namespace Imagine\Gmagick;
 
-use Imagine\AbstractDrawerTest;
+use Imagine\Draw\AbstractDrawerTest;
 
 class DrawerTest extends AbstractDrawerTest
 {
     protected function setUp()
     {
+        parent::setUp();
+
         if (!class_exists('Gmagick')) {
             $this->markTestSkipped('Gmagick is not installed');
         }

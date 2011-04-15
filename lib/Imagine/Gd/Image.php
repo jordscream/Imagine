@@ -11,21 +11,19 @@
 
 namespace Imagine\Gd;
 
-use Imagine\Fill\FillInterface;
-
-use Imagine\Mask\MaskInterface;
-
-use Imagine\Box;
-use Imagine\BoxInterface;
-use Imagine\Color;
+use Imagine\ImageInterface;
+use Imagine\Image\Box;
+use Imagine\Image\BoxInterface;
+use Imagine\Image\Color;
+use Imagine\Image\Point;
+use Imagine\Image\PointInterface;
+use Imagine\Image\Point\Center;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\OutOfBoundsException;
 use Imagine\Exception\RuntimeException;
+use Imagine\Fill\FillInterface;
 use Imagine\Gd\Imagine;
-use Imagine\ImageInterface;
-use Imagine\Point;
-use Imagine\Point\Center;
-use Imagine\PointInterface;
+use Imagine\Mask\MaskInterface;
 
 final class Image implements ImageInterface
 {
@@ -116,8 +114,6 @@ final class Image implements ImageInterface
 
         imagedestroy($this->resource);
 
-        $this->width    = $width;
-        $this->height   = $height;
         $this->resource = $dest;
 
         return $this;
@@ -206,8 +202,6 @@ final class Image implements ImageInterface
 
         imagedestroy($this->resource);
 
-        $this->width    = imagesx($resource);
-        $this->height   = imagesy($resource);
         $this->resource = $resource;
 
         return $this;
@@ -349,8 +343,8 @@ final class Image implements ImageInterface
 
         if ($mode === ImageInterface::THUMBNAIL_OUTBOUND) {
             $thumbnail->crop(new Point(
-                round(($thumbnailSize->getWidth() - $width) / 2),
-                round(($thumbnailSize->getHeight() - $height) / 2)
+                max(0, round(($thumbnailSize->getWidth() - $width) / 2)),
+                max(0, round(($thumbnailSize->getHeight() - $height) / 2))
             ), $size);
         }
 
@@ -460,6 +454,34 @@ final class Image implements ImageInterface
     }
 
     /**
+     * (non-PHPdoc)
+     * @see Imagine\ImageInterface::histogram()
+     */
+    public function histogram()
+    {
+        $size   = $this->getSize();
+        $colors = array();
+
+        for ($x = 0; $x < $size->getWidth(); $x++) {
+            for ($y = 0; $y < $size->getHeight(); $y++) {
+                $index = imagecolorat($this->resource, $x, $y);
+                $info  = imagecolorsforindex($this->resource, $index);
+                $color = new Color(array(
+                        $info['red'],
+                        $info['green'],
+                        $info['blue'],
+                    ),
+                    (int) round($info['alpha'] / 127 * 100)
+                );
+
+                $colors[] = $color;
+            }
+        }
+
+        return array_unique($colors);
+    }
+
+    /**
      * Internal
      *
      * Performs save or show operation using one of GD's image... functions
@@ -519,10 +541,11 @@ final class Image implements ImageInterface
      *
      * Generates a GD color from Color instance
      *
-     * @param  Color $color
-     * @throws RuntimeException
+     * @param  Imagine\Image\Color $color
      *
      * @return resource
+     *
+     * @throws Imagine\Exception\RuntimeException
      */
     private function getColor(Color $color)
     {

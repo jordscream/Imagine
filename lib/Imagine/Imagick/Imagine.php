@@ -11,8 +11,8 @@
 
 namespace Imagine\Imagick;
 
-use Imagine\Color;
-use Imagine\BoxInterface;
+use Imagine\Image\BoxInterface;
+use Imagine\Image\Color;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\RuntimeException;
 use Imagine\ImageInterface;
@@ -20,6 +20,9 @@ use Imagine\ImagineInterface;
 
 final class Imagine implements ImagineInterface
 {
+    /**
+     * @throws Imagine\Exception\RuntimeException
+     */
     public function __construct()
     {
         if (!class_exists('Imagick')) {
@@ -73,6 +76,7 @@ final class Imagine implements ImagineInterface
             $imagick = new \Imagick();
             $imagick->newImage($width, $height, $pixel);
             $imagick->setImageMatte(true);
+            $imagick->setImageBackgroundColor($pixel);
 
             $pixel->clear();
             $pixel->destroy();
@@ -103,5 +107,14 @@ final class Imagine implements ImagineInterface
                 'Could not load image from string', $e->getCode(), $e
             );
         }
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see Imagine\ImagineInterface::font()
+     */
+    public function font($file, $size, Color $color)
+    {
+        return new Font(new \Imagick(), $file, $size, $color);
     }
 }

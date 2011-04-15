@@ -11,17 +11,18 @@
 
 namespace Imagine;
 
-use Imagine\BoxInterface;
-use Imagine\Exception\RuntimeException;
 use Imagine\Exception\InvalidArgumentException;
+use Imagine\Exception\RuntimeException;
+use Imagine\Image\BoxInterface;
+use Imagine\Image\Color;
 
 interface ImagineInterface
 {
     /**
      * Creates a new empty image with an optional background color
      *
-     * @param Imagine\BoxInterface $size
-     * @param Imagine\Color        $color
+     * @param Imagine\Image\BoxInterface $size
+     * @param Imagine\Image\Color        $color
      *
      * @throws Imagine\Exception\InvalidArgumentException
      * @throws Imagine\Exception\RuntimeException
@@ -51,4 +52,17 @@ interface ImagineInterface
      * @return Imagine\ImageInterface
      */
     function load($string);
+
+    /**
+     * Constructs a font with specified $file, $size and $color
+     *
+     * The font size is to be specified in points (e.g. 10pt means 10)
+     *
+     * @param string              $file
+     * @param integer             $size
+     * @param Imagine\Image\Color $color
+     *
+     * @return Imagine\Image\AbstractFont
+     */
+    function font($file, $size, Color $color);
 }
